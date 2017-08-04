@@ -7,6 +7,13 @@ import shutil
 from PIL import Image
 
 
+def test_image(file_name, threshold=5000):
+    # check size of image and return False if size is below threshold 
+    statinfo = os.stat(file_name)
+    if statinfo.st_size < threshold:
+        return False
+    return True
+
 def load_data(file_name):
     '''
     load the various file_name format
@@ -75,11 +82,12 @@ def read_fits(list_files):
     return data    
 
 def make_fits(data=[], filename=''):
-    hdu = pyfits.PrimaryHDU(data)
-    hdulist = pyfits.HDUList([hdu])
-    hdulist.writeto(filename)
-    hdulist.close()
-    
+    fits.writeto(filename, data, clobber=True)
+    #hdu = pyfits.PrimaryHDU(data)
+    #hdulist = pyfits.HDUList([hdu])
+    #hdulist.writeto(filename)
+    #hdulist.close()
+     
 def make_tiff(data=[], filename=''):
     new_image = Image.fromarray(data)
     new_image.save(filename)
@@ -117,15 +125,18 @@ def remove_SummedImg_from_list(list_files):
         list_files_cleaned.append(_file)
     return list_files_cleaned
     
-def make_ascii_file(metadata=[], data=[], output_file_name=''):
+def make_ascii_file(metadata=[], data=[], output_file_name='', dim='2d'):
     f = open(output_file_name, 'w')
     for _meta in metadata:
         _line = _meta + "\n"
         f.write(_line)
         
     for _data in data:
-        _str_data = [str(_value) for _value in _data]
-        _line = ",".join(_str_data) + "\n"
+        if dim == '2d':
+            _str_data = [str(_value) for _value in _data]
+            _line = ",".join(_str_data) + "\n"
+        else:
+            _line = _data + '\n'
         f.write(_line)
        
     f.close()
