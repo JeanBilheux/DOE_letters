@@ -5,7 +5,7 @@ DOE sample range normalization
  Visualize all images and allow to select range (display mean and add of range selected)
  
  * step2
- Normalize range selected by OB or by otehr image selected
+ Normalize range selected by OB or by other image selected
  
  * step3
  Export image normalized
